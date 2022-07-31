@@ -1,6 +1,7 @@
 package com.portfolio.ejz.Controller;
 
 import com.portfolio.ejz.Entity.Persona;
+import com.portfolio.ejz.Interface.IPersonaService;
 import com.portfolio.ejz.Service.PersonaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "https://ejzfront.web.app")
 
 public class PersonaController {
-    @Autowired PersonaService personaService;
+    @Autowired IPersonaService ipersonaService;
     
     @GetMapping("personas/traer")
     public List<Persona> getPersona(){
-        return personaService.getPersona();
+        return ipersonaService.getPersona();
     }
     
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/personas/crear")
     public String createPersona(@RequestBody Persona persona){
-        personaService.savePersona(persona);
+        ipersonaService.savePersona(persona);
         return "La persona fue creada correctamente";
     }
     
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/personas/borrar/{id}")
     public String deletePersona(@PathVariable Long id){
-        personaService.deletePersona(id);
+        ipersonaService.deletePersona(id);
         return "La persona fue eliminada correctamente";
     }
     
@@ -46,18 +47,18 @@ public class PersonaController {
                                @RequestParam("nombre") String nuevoNombre,
                                @RequestParam("apellido") String nuevoApellido,
                                @RequestParam("img") String nuevoImg){
-        Persona persona = personaService.findPersona(id);
+        Persona persona = ipersonaService.findPersona(id);
         
         persona.setNombre(nuevoNombre);
         persona.setApellido(nuevoApellido);
         persona.setImg(nuevoImg);
         
-        personaService.savePersona(persona);
+        ipersonaService.savePersona(persona);
         return persona;
     }
     
     @GetMapping("personas/traer/perfil")
     public Persona findPersona(){
-        return personaService.findPersona((long)1);
+        return ipersonaService.findPersona((long)1);
     }
 }
